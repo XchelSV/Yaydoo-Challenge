@@ -15,12 +15,13 @@ export class Account {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Client, (client) => client.accounts)
+  @ManyToOne(() => Client, (client) => client.accounts, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'FK_client' })
   client: Client;
 
   @OneToMany(() => Transaction, (transaction) => transaction.account, {
     eager: true,
+    onDelete: 'CASCADE',
   })
   transactions: Transaction[];
 

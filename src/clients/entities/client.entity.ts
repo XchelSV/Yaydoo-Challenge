@@ -21,6 +21,7 @@ export class Client {
 
   @OneToMany(() => Account, (account) => account.client, {
     eager: true,
+    onDelete: 'CASCADE',
   })
   accounts: Account[];
 

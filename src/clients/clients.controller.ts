@@ -1,9 +1,13 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import {
   CreateClientDto,
   CreateClientResponseDto,
 } from './dto/create-client.dto';
+import {
+  DeleteClientDto,
+  DeleteClientResponseDto,
+} from './dto/delete-client.dto';
 import { GetClientsDto, GetClientsResponseDto } from './dto/get-clients.dto';
 
 @Controller('clients')
@@ -20,5 +24,11 @@ export class ClientsController {
     @Query() getClientsDto: GetClientsDto,
   ): Promise<GetClientsResponseDto> {
     return this.clientsService.getClients(getClientsDto);
+  }
+  @Delete('/')
+  async deleteClient(
+    @Query() deleteClientDto: DeleteClientDto,
+  ): Promise<DeleteClientResponseDto> {
+    return this.clientsService.deleteClient(deleteClientDto);
   }
 }

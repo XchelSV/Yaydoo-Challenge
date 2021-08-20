@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Between } from 'typeorm';
 import { AccountRepository, ClientRepository } from './clients.repository';
@@ -6,6 +6,10 @@ import {
   CreateClientDto,
   CreateClientResponseDto,
 } from './dto/create-client.dto';
+import {
+  DeleteClientDto,
+  DeleteClientResponseDto,
+} from './dto/delete-client.dto';
 import { GetClientsDto, GetClientsResponseDto } from './dto/get-clients.dto';
 
 @Injectable()
@@ -33,10 +37,20 @@ export class ClientsService {
       start_date.setUTCHours(0, 0, 0, 0);
       const end_date = new Date(getClientsDto.date);
       end_date.setUTCHours(23, 59, 59, 999);
-      console.log(start_date, end_date);
       query = { created_at: Between(start_date, end_date) };
     }
     const clients = await this.clientRepository.find(query);
     return { clients };
+  }
+  async deleteClient(
+    deleteClientDto: DeleteClientDto,
+  ): Promise<DeleteClientResponseDto> {
+    const { id } = deleteClientDto;
+    const client = await this.clientRepository.findOne({ id });
+    if (!client) {
+      throw new NotFoundException(`No se encontró un cliente con el id: ${id}`);
+    }
+    await this.clientRepository.delete(id);
+    return { message: 'Cliente Eliminado Exitosamente' };
   }
 }
