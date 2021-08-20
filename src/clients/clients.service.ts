@@ -12,6 +12,7 @@ import {
 } from './dto/delete-client.dto';
 import { GetClientsDto, GetClientsResponseDto } from './dto/get-clients.dto';
 import { Account } from './entities/account.entity';
+import { Client } from './entities/client.entity';
 
 @Injectable()
 export class ClientsService {
@@ -60,5 +61,12 @@ export class ClientsService {
       throw new NotFoundException(`No se encontró un account con el id: ${id}`);
     }
     return account;
+  }
+  async getClientById(id: string): Promise<Client> {
+    const client = await this.clientRepository.findOne({ id });
+    if (!client) {
+      throw new NotFoundException(`No se encontró un client con el id: ${id}`);
+    }
+    return client;
   }
 }

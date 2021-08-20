@@ -1,9 +1,13 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { ClientsService } from 'src/clients/clients.service';
 import {
   CreateTransactionDto,
   CreateTransactionResponseDto,
 } from './dto/create-transaction.dto';
+import {
+  GetClientTransactionsDto,
+  GetClientTransactionsResponseDto,
+} from './dto/get-client-transactions';
 import { TransactionsService } from './transactions.service';
 
 @Controller('transactions')
@@ -21,6 +25,17 @@ export class TransactionsController {
     return this.transactionsService.createTransaction(
       createTransactionDto,
       account,
+    );
+  }
+  @Get('/')
+  async getClientTransactions(
+    @Query() getClientTransactions: GetClientTransactionsDto,
+  ): Promise<GetClientTransactionsResponseDto> {
+    const { client_id } = getClientTransactions;
+    const client = await this.clientService.getClientById(client_id);
+    return this.transactionsService.getClientTransactions(
+      getClientTransactions,
+      client,
     );
   }
 }
