@@ -1,0 +1,47 @@
+version: '3.5'
+services:
+  challenge-api:
+    image: yaydoo/challenge
+    container_name: challenge-api
+    hostname: challenge-api
+    restart: always
+    build:
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    expose:
+      - '3000'
+    ports: 
+      - '3000:3000'
+    command: npm run start:dev
+    env_file:
+      - ./.env
+    networks: 
+      - challenge_network
+    depends_on:
+      - challenge-db
+
+  challenge-db:
+    restart: always
+    container_name: challenge-db
+    hostname: challenge-db
+    image: postgres:latest
+    ports:
+      - "3001:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data/
+    env_file:
+      - ./.env
+    networks: 
+      - challenge_network
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  challenge_network:
+    name: challenge_network
+    driver: bridge
