@@ -20,7 +20,7 @@ export class Transaction {
   @JoinColumn({ name: 'FK_account' })
   account: Account;
 
-  @Column()
+  @Column('decimal')
   amount: number;
 
   @CreateDateColumn()

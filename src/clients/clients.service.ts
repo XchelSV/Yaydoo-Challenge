@@ -11,6 +11,7 @@ import {
   DeleteClientResponseDto,
 } from './dto/delete-client.dto';
 import { GetClientsDto, GetClientsResponseDto } from './dto/get-clients.dto';
+import { Account } from './entities/account.entity';
 
 @Injectable()
 export class ClientsService {
@@ -52,5 +53,12 @@ export class ClientsService {
     }
     await this.clientRepository.delete(id);
     return { message: 'Cliente Eliminado Exitosamente' };
+  }
+  async getAccountById(id: string): Promise<Account> {
+    const account = await this.accountRepository.findOne({ id });
+    if (!account) {
+      throw new NotFoundException(`No se encontró un account con el id: ${id}`);
+    }
+    return account;
   }
 }
