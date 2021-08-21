@@ -1,6 +1,10 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { User } from './entities/user.entity';
 import * as md5 from 'md5';
+import {
+  ConflictException,
+  InternalServerErrorException,
+} from '@nestjs/common';
 
 @EntityRepository(User)
 export class UserRepository extends Repository<User> {
@@ -8,6 +12,14 @@ export class UserRepository extends Repository<User> {
     const user = new User();
     user.email = email;
     user.password = md5(password);
-    await this.save(user);
+    try {
+      await this.save(user);
+    } catch (error) {
+      if (error.code === '23505') {
+        throw new ConflictException('Email ya registrado');
+      } else {
+        throw new InternalServerErrorException(error.toString());
+      }
+    }
   }
 }
