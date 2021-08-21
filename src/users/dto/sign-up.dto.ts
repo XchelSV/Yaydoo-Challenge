@@ -1,8 +1,17 @@
+import { ApiProperty, ApiResponseProperty } from '@nestjs/swagger';
 import { IsEmail, IsNotEmpty, Matches, MinLength } from 'class-validator';
 
 export class SignUpDto {
+  @ApiProperty({
+    type: String,
+    example: 'test@example.com',
+  })
   @IsEmail()
   email: string;
+  @ApiProperty({
+    type: String,
+    example: 'Abcdefghij.1',
+  })
   @IsNotEmpty()
   @MinLength(8)
   @Matches(/((?=.*\d)|(?=.*\W+))(?![.\n])(?=.*[A-Z])(?=.*[a-z]).*$/, {
@@ -12,5 +21,9 @@ export class SignUpDto {
   password: string;
 }
 export class SignUpResponseDto {
+  @ApiResponseProperty({
+    type: String,
+    example: 'Usuario Registrado',
+  })
   message: string;
 }

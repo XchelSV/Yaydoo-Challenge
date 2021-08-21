@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ClientsService } from 'src/clients/clients.service';
 import {
   CreateTransactionDto,
@@ -11,6 +12,8 @@ import {
 } from './dto/get-client-transactions';
 import { TransactionsService } from './transactions.service';
 
+@ApiTags('Transactions Endpoints')
+@ApiBearerAuth()
 @Controller('transactions')
 @UseGuards(AuthGuard())
 export class TransactionsController {
@@ -19,6 +22,10 @@ export class TransactionsController {
     private clientService: ClientsService,
   ) {}
   @Post('/')
+  @ApiOperation({
+    summary: 'Endpoint para crear transacciones sobre la cuenta de un cliente',
+  })
+  @ApiResponse({ status: 201, type: CreateTransactionResponseDto })
   async createTransaction(
     @Body() createTransactionDto: CreateTransactionDto,
   ): Promise<CreateTransactionResponseDto> {
@@ -30,6 +37,11 @@ export class TransactionsController {
     );
   }
   @Get('/')
+  @ApiOperation({
+    summary:
+      'Endpoint para obtener el listado de todas las transacciones de las cuentas de un cliente',
+  })
+  @ApiResponse({ status: 200, type: GetClientTransactionsResponseDto })
   async getClientTransactions(
     @Query() getClientTransactions: GetClientTransactionsDto,
   ): Promise<GetClientTransactionsResponseDto> {
