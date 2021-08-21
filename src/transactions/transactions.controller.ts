@@ -1,4 +1,5 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ClientsService } from 'src/clients/clients.service';
 import {
   CreateTransactionDto,
@@ -11,6 +12,7 @@ import {
 import { TransactionsService } from './transactions.service';
 
 @Controller('transactions')
+@UseGuards(AuthGuard())
 export class TransactionsController {
   constructor(
     private transactionsService: TransactionsService,

@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Post,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { ClientsService } from './clients.service';
 import {
   CreateClientDto,
@@ -11,6 +20,7 @@ import {
 import { GetClientsDto, GetClientsResponseDto } from './dto/get-clients.dto';
 
 @Controller('clients')
+@UseGuards(AuthGuard())
 export class ClientsController {
   constructor(private clientsService: ClientsService) {}
   @Post('/')
